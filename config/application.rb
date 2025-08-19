@@ -23,6 +23,6 @@ module IssueTrackingApp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-    config.hosts << "curbside-be.ngrok.io"
+    config.hosts << "issue-tracking-app-zeta.vercel.app"
   end
 end
