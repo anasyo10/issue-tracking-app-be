@@ -45,7 +45,7 @@ RSpec.describe Issue, type: :model do
     it "should destroy associated comments when issue is destroyed" do
       issue = create(:issue)
       create_list(:comment, 2, issue: issue)
-      
+
       expect { issue.destroy }.to change(Comment, :count).by(-2)
     end
   end

@@ -13,9 +13,9 @@ Rails.application.routes.draw do
   resources :projects do
     resources :issues
   end
-  
+
   resources :issues do
-    resources :comments, except: [:update]
+    resources :comments
   end
 
   # Defines the root path route ("/")
