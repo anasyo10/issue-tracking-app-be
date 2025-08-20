@@ -16,7 +16,7 @@ RSpec.describe IssuesController, type: :controller do
     it "returns success response" do
       get :index, params: { project_id: @project.id }, as: :json
       expect(response).to have_http_status(:success)
-      
+
       response_data = JSON.parse(response.body)
       expect(response_data.length).to eq(1)
       expect(response_data.first["title"]).to eq(@issue.title)
@@ -41,7 +41,7 @@ RSpec.describe IssuesController, type: :controller do
 
       get :index, params: { project_id: @project.id }, as: :json
       expect(response).to have_http_status(:success)
-      
+
       response_data = JSON.parse(response.body)
       expect(response_data.length).to eq(1)
       expect(response_data.first["title"]).to eq(@issue.title)
@@ -53,7 +53,7 @@ RSpec.describe IssuesController, type: :controller do
     it "returns success response" do
       get :show, params: { project_id: @project.id, id: @issue.id }, as: :json
       expect(response).to have_http_status(:success)
-      
+
       response_data = JSON.parse(response.body)
       expect(response_data["title"]).to eq(@issue.title)
       expect(response_data["project"]).not_to be_nil
@@ -69,14 +69,14 @@ RSpec.describe IssuesController, type: :controller do
   describe "POST #create" do
     it "creates issue with valid params" do
       expect {
-        post :create, params: { 
+        post :create, params: {
           project_id: @project.id,
-          issue: { 
+          issue: {
             title: "New Issue",
             description: "New Description",
             assigned_to: "New User",
             status: "to_do"
-          } 
+          }
         }, as: :json
       }.to change(Issue, :count).by(1)
 
@@ -91,13 +91,13 @@ RSpec.describe IssuesController, type: :controller do
 
     it "does not create issue with invalid params" do
       expect {
-        post :create, params: { 
+        post :create, params: {
           project_id: @project.id,
-          issue: { 
+          issue: {
             title: "",
             description: "",
             assigned_to: ""
-          } 
+          }
         }, as: :json
       }.not_to change(Issue, :count)
 
@@ -111,36 +111,36 @@ RSpec.describe IssuesController, type: :controller do
 
   describe "PATCH #update" do
     it "updates issue with valid params" do
-      patch :update, params: { 
+      patch :update, params: {
         project_id: @project.id,
         id: @issue.id,
-        issue: { 
+        issue: {
           title: "Updated Issue",
           status: "active"
-        } 
+        }
       }, as: :json
       expect(response).to have_http_status(:success)
-      
+
       response_data = JSON.parse(response.body)
       expect(response_data["title"]).to eq("Updated Issue")
       expect(response_data["status"]).to eq("active")
-      
+
       @issue.reload
       expect(@issue.title).to eq("Updated Issue")
       expect(@issue.status).to eq("active")
     end
 
     it "does not update issue with invalid params" do
-      patch :update, params: { 
+      patch :update, params: {
         project_id: @project.id,
         id: @issue.id,
-        issue: { 
+        issue: {
           title: "",
           description: ""
-        } 
+        }
       }, as: :json
       expect(response).to have_http_status(:unprocessable_content)
-      
+
       response_data = JSON.parse(response.body)
       expect(response_data["errors"]["title"]).to include("can't be blank")
       expect(response_data["errors"]["description"]).to include("can't be blank")
@@ -153,7 +153,9 @@ RSpec.describe IssuesController, type: :controller do
         delete :destroy, params: { project_id: @project.id, id: @issue.id }, as: :json
       }.to change(Issue, :count).by(-1)
 
-      expect(response).to have_http_status(:no_content)
+      expect(response).to have_http_status(:success)
+      response_data = JSON.parse(response.body)
+      expect(response_data["message"]).to eq("Issue deleted successfully")
     end
   end
 end

@@ -9,7 +9,7 @@ RSpec.describe ProjectsController, type: :controller do
     it "returns success response" do
       get :index, as: :json
       expect(response).to have_http_status(:success)
-      
+
       response_data = JSON.parse(response.body)
       expect(response_data.length).to eq(1)
       expect(response_data.first["name"]).to eq(@project.name)
@@ -20,7 +20,7 @@ RSpec.describe ProjectsController, type: :controller do
     it "returns success response" do
       get :show, params: { id: @project.id }, as: :json
       expect(response).to have_http_status(:success)
-      
+
       response_data = JSON.parse(response.body)
       expect(response_data["name"]).to eq(@project.name)
     end
@@ -57,10 +57,10 @@ RSpec.describe ProjectsController, type: :controller do
     it "updates project with valid params" do
       patch :update, params: { id: @project.id, project: { name: "Updated Project" } }, as: :json
       expect(response).to have_http_status(:success)
-      
+
       response_data = JSON.parse(response.body)
       expect(response_data["name"]).to eq("Updated Project")
-      
+
       @project.reload
       expect(@project.name).to eq("Updated Project")
     end
@@ -68,7 +68,7 @@ RSpec.describe ProjectsController, type: :controller do
     it "does not update project with invalid params" do
       patch :update, params: { id: @project.id, project: { name: "" } }, as: :json
       expect(response).to have_http_status(:unprocessable_content)
-      
+
       response_data = JSON.parse(response.body)
       expect(response_data["errors"]["name"]).to include("can't be blank")
     end
@@ -80,7 +80,9 @@ RSpec.describe ProjectsController, type: :controller do
         delete :destroy, params: { id: @project.id }, as: :json
       }.to change(Project, :count).by(-1)
 
-      expect(response).to have_http_status(:no_content)
+      expect(response).to have_http_status(:success)
+      response_data = JSON.parse(response.body)
+      expect(response_data["message"]).to eq("Project deleted successfully")
     end
   end
 end
